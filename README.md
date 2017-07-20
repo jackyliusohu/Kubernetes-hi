@@ -1,7 +1,7 @@
-# Kubernetes-hi
+# Kubernetes-Openresty
 
 
-创建 Openresty confi configmap  
+创建 Openresty conf configmap  
 kubectl create  configmap nginx-domains  --from-file=confmap
 
 删除
