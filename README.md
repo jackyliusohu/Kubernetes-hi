@@ -9,4 +9,5 @@ kubectl  delete configmap  nginx-dmains
 
 更新
 kubectl create --save-config
+
 kubectl apply -f nginx-ds.yml
