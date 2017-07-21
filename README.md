@@ -1,8 +1,8 @@
 # Kubernetes-Openresty
 
 
-创建 Openresty conf configmap  
-kubectl create  configmap nginx-domains  --from-file=./nginx-ds.yml
+创建   
+kubectl create  configmap nginx-domains  --from-file=confmap  # confmap 目录是nginx 配置文件
 
 删除
 kubectl  delete configmap  nginx-dmains
