@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: redis-new
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: redis-new
+    spec:
+      containers:
+      - name: redis-new
+        image: 58.132.182.70:5001/redis:alpine
+        ports:
+        - containerPort: 6379
+        resources:
+          requests:
+            cpu: "200m"
+          limits:
+            cpu: "500m"

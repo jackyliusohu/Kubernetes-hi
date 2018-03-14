@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: private-reg
+spec:
+  containers:
+  - name: private-reg-container
+    image: docker-dev.qregistry.local/qlove/user-tomcat:develop
+    env:
+    - name: isOnLine
+      value: "false"
+  imagePullSecrets:
+  - name: docker-dev.qregistry.local
+

@@ -1,0 +1,1 @@
+kubectl create secret docker-registry docker-dev.qregistry.local  --namespace=default --docker-server=docker-dev.qregistry.local --docker-username=dev-deployer --docker-password=vKkpWWesUD1 --docker-email=dev-deployer@shuzijiayuan.com

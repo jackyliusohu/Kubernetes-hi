@@ -1,0 +1,33 @@
+[Unit]
+Description=Kubernetes Kubelet
+Documentation=https://github.com/GoogleCloudPlatform/kubernetes
+After=docker.service
+Requires=docker.service
+
+[Service]
+WorkingDirectory=/var/lib/kubelet
+ExecStart=/root/local/bin/kubelet \
+  --address=172.23.1.239 \
+  --hostname-override=172.23.1.239 \
+  --pod-infra-container-image=registry.access.redhat.com/rhel7/pod-infrastructure:latest \
+  --experimental-bootstrap-kubeconfig=/etc/kubernetes/bootstrap.kubeconfig \
+  --kubeconfig=/etc/kubernetes/kubelet.kubeconfig \
+  --require-kubeconfig \
+  --cert-dir=/etc/kubernetes/ssl \
+  --cluster_dns=10.254.0.2 \
+  --cluster_domain=cluster.local. \
+  --hairpin-mode promiscuous-bridge \
+  --allow-privileged=true \
+  --serialize-image-pulls=true \
+  --logtostderr=false \
+  --v=4 \
+  --cloud-provider=aws
+ExecStopPost=/sbin/iptables -A INPUT -s 10.0.0.0/8 -p tcp --dport 4194 -j ACCEPT
+ExecStopPost=/sbin/iptables -A INPUT -s 172.16.0.0/12 -p tcp --dport 4194 -j ACCEPT
+ExecStopPost=/sbin/iptables -A INPUT -s 192.168.0.0/16 -p tcp --dport 4194 -j ACCEPT
+ExecStopPost=/sbin/iptables -A INPUT -p tcp --dport 4194 -j DROP
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

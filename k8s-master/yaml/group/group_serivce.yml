@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: group-servcie
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: group-servcie
+    spec:
+      containers:
+      - name: group-servcie
+        image: docker-dev.qregistry.local/qlove/group-service:develop 
+        imagePullPolicy: Always
+       # env:
+       # - name: "priest.log.level"
+       #   value: "DEBUG"
+        ports:
+        - containerPort: 20880
+        resources:
+          requests:
+            cpu: "200m"
+          limits:
+            cpu: "500m"
+      imagePullSecrets:
+      - name: docker-dev.qregistry.local

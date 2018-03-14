@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: filter-words-servcie
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: filter-words-servcie
+    spec:
+      containers:
+      - name: filter-words-servcie
+        image: docker-dev.qregistry.local/qlove/filter-words-service:develop 
+        imagePullPolicy: Always
+       # env:
+       # - name: "priest.log.level"
+       #   value: "DEBUG"
+        ports:
+        - containerPort: 20880
+        resources:
+          requests:
+            cpu: "20m"
+          limits:
+            cpu: "500m"
+      imagePullSecrets:
+      - name: docker-dev.qregistry.local

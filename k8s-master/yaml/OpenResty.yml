@@ -1,0 +1,19 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: q-openresty
+  labels:
+    addonmanager.kubernetes.io/mode: Reconcile
+spec:
+  template:
+    metadata:
+      labels:
+        app: q-openresty
+    spec:
+      containers:
+      - name: openresty
+        imagePullPolicy: Always
+        #image: 58.132.182.70:5001/docker-product.qregistry.local/qlove/openresty:latest
+        image: docker-dev.qregistry.local/qlove/openresty:develop
+        ports:
+        - containerPort: 80

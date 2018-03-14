@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: tomcat
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: tomcat
+    spec:
+      containers:
+      - name: tomcat
+        image: 58.132.182.70:5001/qlove/user-tomcat:dev
+        imagePullPolicy: Always
+#        command: [ "echo", "SUCCESS" ]
+        env:
+        - name: isOnLine
+          value: "false"
+        - name: 'priestloglevel'
+          value: "INFO"
+        - name: XMN
+          value: "64m"
+        - name: XMS
+          value: "128m"
+        - name: XMX
+          value: "384m"
+        - name: XSS
+          value: "256k"
+
+
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            cpu: "200m"
+          limits:
+            cpu: "500m"

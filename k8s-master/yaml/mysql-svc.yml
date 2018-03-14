@@ -1,0 +1,8 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: mysql
+spec:
+  type: ExternalName
+#  externalName: 172.23.12.33
+  externalName: lion.corwakrtqb0j.rds.cn-north-1.amazonaws.com.cn

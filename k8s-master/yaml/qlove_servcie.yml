@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: qlove-servcie
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: qlove-servcie
+    spec:
+      containers:
+      - name: qlove-servcie
+        image: docker-dev.qregistry.local/qlove/qlove-service:develop 
+        imagePullPolicy: Always
+        env:
+        - name: "priestloglevel"
+          value: "DEBUG"
+        - name: "voipAppid"
+          value: "8a48b5514fba2f87014fd1b2da9a3619"
+        - name: domain
+          value: "http://sandboxapi.ziseyiliao.com"
+        - name: duduAppid
+          value: "bf27269d3f26b8c720c8900e78ba4b99"
+        - name: AppSecret
+          value: "107694bd786640b5fff1727c3aede80b0597573d7"
+        ports:
+        - containerPort: 20880
+        resources:
+          requests:
+            cpu: "20m"
+          limits:
+            cpu: "500m"
+      imagePullSecrets:
+      - name: docker-dev.qregistry.local

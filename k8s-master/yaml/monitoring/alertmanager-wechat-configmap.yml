@@ -1,0 +1,32 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: alertmanager
+data:
+  config.yml: |-
+    global:
+      resolve_timeout: 5m
+      smtp_smarthost: 'smtp.163.com:25'
+      smtp_from: 'jiayuan_gitlab@163.com'
+      smtp_auth_username: 'jiayuan_gitlab'
+      smtp_auth_password: 'KD3xJtk2kCgo'
+    route:
+      group_by: ['alertname', 'cluster', 'service']
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 15m
+      receiver: ops 
+      routes:
+      - match:
+          severity: email
+        receiver: email_alert
+      - match:
+          severity: ops
+        receiver: ops 
+    receivers:
+    - name: 'email_alert'
+      email_configs:
+      - to: 'liupeng@shuzijiayuan.com'
+    - name: 'ops'
+      webhook_configs:
+      - url: http://172.23.14.253:82/sendmessage/wechat/

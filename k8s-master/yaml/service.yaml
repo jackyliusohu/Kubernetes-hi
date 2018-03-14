@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: user-servcie
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: user-servcie
+    spec:
+      containers:
+      - name: user-servcie
+        image: 58.132.182.70:5001/qlove/user-service:dev
+        ports:
+        - containerPort: 20880
+        resources:
+          requests:
+            cpu: "200m"
+          limits:
+            cpu: "500m"

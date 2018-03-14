@@ -1,0 +1,101 @@
+apiVersion: v1
+kind: "Service"
+metadata:
+  name: prometheus
+  labels:
+    name: prometheus-service
+spec:
+  ports:
+  - name: prometheus-server
+    protocol: TCP
+    port: 9090
+    targetPort: 9090
+  - name: alertmanager
+    protocol: TCP
+    port: 9093
+    targetPort: 9093
+  - name: prometheus-rest
+    protocol: TCP
+    port: 16010
+    targetPort: 16010
+  selector:
+    app: prometheus-server
+  type: NodePort
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    name: prometheus
+  name: prometheus
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: prometheus-server
+    spec:
+      serviceAccountName: prometheus
+      serviceAccount: prometheus
+      containers:
+      - name: prometheus
+        image: docker-dev.qregistry.local/prom/prometheus:v1.7.1 
+        command:
+        - "/bin/prometheus"
+        args:
+        - "-config.file=/etc/prometheus/prometheus.yml"
+        - "-storage.local.path=/prometheus"
+        - "-storage.local.retention=24h"
+        - "-alertmanager.url=http://127.0.0.1:9093"
+        ports:
+        - containerPort: 9090
+          protocol: TCP
+        volumeMounts:
+        - mountPath: "/prometheus"
+          name: data
+        - mountPath: "/etc/prometheus"
+          name: config-volume
+        - mountPath: "/etc/prometheus-rules"
+          name: alert-roles
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 500m
+            memory: 2500Mi
+      - name: altermanager
+        image: prom/alertmanager:v0.7.1
+        args:
+          - '-config.file=/etc/alertmanager/config.yml'
+          - '-storage.path=/alertmanager'
+        ports:
+        - containerPort: 9093
+          protocol: TCP
+        volumeMounts:
+        - name: alertmanager-config-volume
+          mountPath: /etc/alertmanager
+        - name: templates-volume
+          mountPath: /etc/alertmanager-templates
+      - name: prometheus-rest
+        image: registry.cn-hangzhou.aliyuncs.com/wise2c/prometheus-rest:0.1.0-beta
+        volumeMounts:
+        - mountPath: "/etc/prometheus-rules"
+          name: alert-roles
+        ports:
+        - containerPort: 16010
+          protocol: TCP
+      volumes:
+      - emptyDir: {}
+        name: data
+      - emptyDir: {}
+        name: alert-roles
+      - name: config-volume
+        configMap:
+          name: prometheus-config
+      - name: alertmanager-config-volume
+        configMap:
+          name: alertmanager
+      - name: templates-volume
+        configMap:
+          name: alertmanager
